@@ -53,4 +53,8 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.24'
     kapt "com.google.dagger:dagger-compiler:2.24"
     kapt "com.google.dagger:dagger-android-processor:2.24"
+    // Retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
 }

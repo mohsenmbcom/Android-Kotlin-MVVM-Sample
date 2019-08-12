@@ -11,6 +11,7 @@ interface NewsApi {
     @GET("v2/top-headlines")
     fun loadTopHeadlines(
         @Query("page") page: Int,
-        @Query("pageSize") pageSize: Int = 21
-    ): Single<String>
+        @Query("pageSize") pageSize: Int = 21,
+        @Query("country") country: String = "us"
+    ): Single<TopHeadlinesResponse>
 }

@@ -4,11 +4,14 @@ import com.google.gson.annotations.SerializedName
 import com.mohsenmb.googlenewsapisample.repository.toLocalDate
 import java.util.*
 
+const val STATUS_OK = "ok"
+const val STATUS_ERROR = "error"
+
 data class TopHeadlinesResponse(
     @SerializedName("status")
     val status: String,
 
-    @SerializedName("Hello")
+    @SerializedName("totalResults")
     val totalResults: Int,
 
     @SerializedName("articles")

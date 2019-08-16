@@ -1,7 +1,6 @@
 package com.mohsenmb.googlenewsapisample.ui.headlines
 
 import android.graphics.Rect
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,21 +51,20 @@ class NewsRecyclerAdapter() : RecyclerView.Adapter<DataBindingViewHolder>() {
 	}
 
 	fun updateNews(news: List<PersistedArticle>) {
-		Log.e("ListSize", "${news.size}")
 		disposables.clear()
 		disposables.add(
 			Single.just(articles to news)
 				.map { (oldList, newList) ->
 					val diff = DiffUtil.calculateDiff(NewsDiffCallback(oldList, newList), false)
-					oldList.apply {
-						clear()
-						addAll(newList)
-					}
-					diff
+					diff to newList
 				}
 				.subscribeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe({ diff ->
+				.subscribe({ (diff, newList) ->
+					articles.apply {
+						clear()
+						addAll(newList)
+					}
 					diff.dispatchUpdatesTo(this@NewsRecyclerAdapter)
 				}, {
 					it.printStackTrace()

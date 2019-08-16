@@ -16,13 +16,15 @@ object BindingAdapters {
 		if (url == null) {
 			imageView.setImageResource(R.drawable.img_news_placeholder)
 		} else {
-			Picasso.get()
-				.load(url)
-				.placeholder(R.drawable.img_news_placeholder)
-				.error(R.drawable.img_news_placeholder)
-				.resize(250, 250)
-				.centerCrop()
-				.into(imageView)
+			imageView.post {
+				Picasso.get()
+					.load(url)
+					.placeholder(R.drawable.img_news_placeholder)
+					.error(R.drawable.img_news_placeholder)
+					.resize(imageView.measuredWidth, imageView.measuredHeight)
+					.centerCrop()
+					.into(imageView)
+			}
 		}
 	}
 

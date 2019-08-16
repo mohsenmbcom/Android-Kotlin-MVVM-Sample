@@ -4,11 +4,13 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.mohsenmb.googlenewsapisample.R
 import com.mohsenmb.googlenewsapisample.repository.persistence.PersistedArticle
 import com.mohsenmb.googlenewsapisample.repository.webservice.Error
@@ -30,8 +32,10 @@ class MainActivity : BaseActivity() {
 	private val adapter = NewsRecyclerAdapter()
 	private lateinit var layoutManager: GridLayoutManager
 
-	override fun onStart() {
-		super.onStart()
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.activity_main)
+
 		AndroidInjection.inject(this)
 		viewModel = ViewModelProviders.of(this, viewModelFactory)[HeadlinesViewModel::class.java]
 		viewModel.getArticlesLiveData().observe(this, Observer(::onHeadlinesChanged))
@@ -39,11 +43,6 @@ class MainActivity : BaseActivity() {
 
 		view_refresh.isRefreshing = true
 		viewModel.firstPage()
-	}
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
 
 		adapter.onItemClickListener = { article ->
 			val builder = CustomTabsIntent.Builder()
@@ -64,13 +63,15 @@ class MainActivity : BaseActivity() {
 		}
 		recycler_articles.layoutManager = layoutManager
 
-		val itemDecoration = SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.news_item_spacing))
+		val itemDecoration =
+			SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.news_item_spacing))
 		recycler_articles.addItemDecoration(itemDecoration)
 
 		recycler_articles.setOnScrollChangeListener { _, _, _, _, _ ->
 			if (!view_refresh.isRefreshing &&
 				!lastPage &&
-				layoutManager.findLastVisibleItemPosition() >= adapter.itemCount - 3) {
+				layoutManager.findLastVisibleItemPosition() >= adapter.itemCount - 3
+			) {
 				view_refresh.isRefreshing = true
 				viewModel.nextPage()
 			}
@@ -85,13 +86,15 @@ class MainActivity : BaseActivity() {
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		val spanCount = resources.getInteger(R.integer.news_list_item_span_count)
-		layoutManager.spanCount = spanCount
+		if (layoutManager.spanCount != spanCount) {
+			layoutManager.spanCount = spanCount
+		}
 	}
 
-	override fun onStop() {
+	override fun onDestroy() {
 		viewModel.getArticlesLiveData().removeObservers(this)
 		viewModel.getErrorsLiveData().removeObservers(this)
-		super.onStop()
+		super.onDestroy()
 	}
 
 	private fun onHeadlinesChanged(list: List<PersistedArticle>?) {
@@ -102,24 +105,26 @@ class MainActivity : BaseActivity() {
 		view_refresh.isRefreshing = false
 		error?.let {
 			when (it.type) {
-				ErrorType.NoError -> {
-				}
-				ErrorType.Http -> {
-				}
-				ErrorType.Timeout -> {
+				ErrorType.Timeout, ErrorType.Http, ErrorType.Unknown -> {
+					showRetrySnackBar(R.string.cant_load_data)
 				}
 				ErrorType.NetworkOffline -> {
-				}
-				ErrorType.NoMoreOnlineData -> {
+					showRetrySnackBar(R.string.network_unavailable_check_connection)
 				}
 				ErrorType.NoMoreDate -> {
 					lastPage = true
 				}
-				ErrorType.Unknown -> {
-				}
 			}
 			Log.e("ErrorHandling", it.toString())
-//			Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
 		}
+	}
+
+	private fun showRetrySnackBar(@StringRes message: Int) {
+		Snackbar.make(view_refresh, message, Snackbar.LENGTH_INDEFINITE)
+			.setAction(R.string.retry) {
+				lastPage = false
+				viewModel.firstPage()
+			}
+			.show()
 	}
 }

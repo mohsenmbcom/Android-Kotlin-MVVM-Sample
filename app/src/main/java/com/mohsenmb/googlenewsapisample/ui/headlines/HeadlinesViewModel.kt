@@ -41,6 +41,7 @@ class HeadlinesViewModel @Inject constructor(
 	fun getErrorsLiveData() = errors
 
 	fun firstPage() {
+		goOffline = false
 		page = 1
 		fromDate = Date()
 		loadArticles(false)

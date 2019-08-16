@@ -10,6 +10,14 @@
 
 		<item name="android:fontFamily">@font/regular_font</item>
 		<item name="fontFamily">@font/regular_font</item>
+
+		<item name="android:toolbarStyle">@style/AppTheme.ToolbarStyle</item>
+		<item name="toolbarStyle">@style/AppTheme.ToolbarStyle</item>
+	</style>
+
+	<style name="AppTheme.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+		<item name="android:fontFamily">@font/title_font</item>
+		<item name="fontFamily">@font/title_font</item>
 	</style>
 
 </resources>

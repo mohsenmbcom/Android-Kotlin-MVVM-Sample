@@ -29,7 +29,7 @@ data class Article(
     val title: String,
 
     @SerializedName("description")
-    val description: String,
+    val description: String?,
 
     @SerializedName("url")
     val articleUrl: String,
@@ -41,7 +41,7 @@ data class Article(
     val publishedAt: String,
 
     @SerializedName("content")
-    val content: String
+    val content: String?
 ) {
     val publishDate: Date?
         get() = publishedAt.toLocalDate()

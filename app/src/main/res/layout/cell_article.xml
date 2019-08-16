@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<data>
+
+		<import type="com.mohsenmb.googlenewsapisample.repository.persistence.PersistedArticle" />
+		<import type="kotlin.jvm.functions.Function1" />
+		<import type="kotlin.Unit" />
+		<variable
+			name="article"
+			type="PersistedArticle" />
+
+		<variable
+			name="onItemClickListener"
+			type="Function1&lt;PersistedArticle, Unit&gt;" />
+	</data>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<androidx.cardview.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="2dp"
+			android:clickable="true"
+			android:focusable="true"
+			android:onClick="@{() -> onItemClickListener.invoke(article)}"
+			android:foreground="?attr/selectableItemBackground"
+			app:cardCornerRadius="4dp"
+			app:cardElevation="1dp">
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<androidx.appcompat.widget.AppCompatImageView
+					android:id="@+id/image_cover"
+					android:layout_width="0dp"
+					android:layout_height="0dp"
+					android:scaleType="centerCrop"
+					app:imageUrl="@{article.imageUrl}"
+					app:layout_constraintDimensionRatio="5:2"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:srcCompat="@drawable/img_news_placeholder" />
+
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/text_title"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_margin="8dp"
+					android:ellipsize="end"
+					android:maxLines="2"
+					android:text="@{article.title}"
+					android:textAppearance="@style/TextAppearance.AppCompat.Title"
+					android:textSize="14sp"
+					app:fontFamily="@font/title_font"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/image_cover"
+					app:layout_constraintVertical_bias="0.0"
+					tools:text="A simple news title to see the preview" />
+
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/text_time"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="16dp"
+					android:layout_marginEnd="8dp"
+					android:layout_marginBottom="8dp"
+					android:fontFamily="monospace"
+					android:textSize="10sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/text_title"
+					app:time="@{article.publishDate}"
+					tools:text="4 minutes ago" />
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+		</androidx.cardview.widget.CardView>
+	</FrameLayout>
+</layout>

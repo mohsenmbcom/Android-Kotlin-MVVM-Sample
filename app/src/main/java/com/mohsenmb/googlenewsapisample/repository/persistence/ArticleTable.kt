@@ -3,11 +3,11 @@ package com.mohsenmb.googlenewsapisample.repository.persistence
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mohsenmb.googlenewsapisample.repository.webservice.Article
 import java.util.*
 
-
 @Entity(tableName = "articles")
-class Article(
+class PersistedArticle(
     val source: String?,
     val author: String?,
     val publishDate: Date,
@@ -21,3 +21,15 @@ class Article(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 }
+
+fun Article.toPersistedArticle(): PersistedArticle =
+    PersistedArticle(
+        articleSource.name,
+        author,
+        publishDate ?: Date(0),
+        title,
+        description,
+        articleUrl,
+        imageUrl,
+        content
+    )

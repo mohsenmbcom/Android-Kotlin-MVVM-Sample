@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.mohsenmb.googlenewsapisample.repository.persistence.Article
 import com.mohsenmb.googlenewsapisample.repository.persistence.ArticlesDao
 import com.mohsenmb.googlenewsapisample.repository.persistence.ArticlesDatabase
+import com.mohsenmb.googlenewsapisample.repository.persistence.PersistedArticle
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
@@ -24,7 +24,7 @@ class SimpleEntityReadWriteTest {
     private lateinit var articlesDao: ArticlesDao
     private lateinit var db: ArticlesDatabase
 
-    private lateinit var testArticle: Article
+    private lateinit var testArticle: PersistedArticle
 
     @Before
     fun prepare() {
@@ -34,7 +34,7 @@ class SimpleEntityReadWriteTest {
             .build()
         articlesDao = db.articlesDao()
 
-        testArticle = Article(
+        testArticle = PersistedArticle(
             "Test Source",
             "Test Author",
             Date(),
@@ -84,7 +84,7 @@ class SimpleEntityReadWriteTest {
     }
 
     private fun articlesDatabase_getAllArticles_checkIfEmptyOrNot(shouldBeEmpty: Boolean) {
-        val subscriber = articlesDao.getAllNews()
+        val subscriber = articlesDao.fetchNews(Date(), 100)
             .subscribeOn(Schedulers.trampoline())
             .test()
 
@@ -92,8 +92,8 @@ class SimpleEntityReadWriteTest {
             if (shouldBeEmpty) {
                 it.isEmpty()
             } else {
-                it.any {
-                    testArticle.title == it.title
+                it.any { article ->
+                    testArticle.title == article.title
                 }
             }
         }

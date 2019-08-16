@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Single
+import java.util.*
 
 /**
  * Used these article to make sure about the implementation
@@ -16,14 +17,17 @@ import io.reactivex.Single
 @Dao
 interface ArticlesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(article: Article): Completable
+    fun insert(article: PersistedArticle): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(users: List<Article>): Completable
+    fun insertAll(users: List<PersistedArticle>): Completable
 
     @Query("DELETE FROM articles")
     fun clearAllNews(): Completable
 
-    @Query("SELECT * FROM articles ORDER BY publishDate DESC")
-    fun getAllNews(): Single<List<Article>>
+    @Query("""SELECT * FROM articles 
+        WHERE publishDate < :fromDate 
+        ORDER BY publishDate DESC 
+        LIMIT :pageSize""")
+    fun fetchNews(fromDate: Date, pageSize: Int): Single<List<PersistedArticle>>
 }

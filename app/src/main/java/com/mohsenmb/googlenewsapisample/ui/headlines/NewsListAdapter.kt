@@ -77,14 +77,14 @@ class NewsRecyclerAdapter() : RecyclerView.Adapter<DataBindingViewHolder>() {
 class NewsDiffCallback(val oldList: List<PersistedArticle>, val newList: List<PersistedArticle>) :
 	DiffUtil.Callback() {
 	override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-		oldList[oldItemPosition] == newList[newItemPosition]
+		oldList[oldItemPosition].articleUrl == newList[newItemPosition].articleUrl
 
 	override fun getOldListSize(): Int = oldList.size
 
 	override fun getNewListSize(): Int = newList.size
 
 	override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-		oldList[oldItemPosition] == newList[newItemPosition]
+		oldList[oldItemPosition].articleUrl == newList[newItemPosition].articleUrl
 
 }
 

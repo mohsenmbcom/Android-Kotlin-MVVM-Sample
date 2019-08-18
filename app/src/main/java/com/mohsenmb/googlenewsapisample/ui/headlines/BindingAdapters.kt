@@ -21,7 +21,7 @@ object BindingAdapters {
 					.load(url)
 					.placeholder(R.drawable.img_news_placeholder)
 					.error(R.drawable.img_news_placeholder)
-					.resize(imageView.measuredWidth, imageView.measuredHeight)
+					.fit()
 					.centerCrop()
 					.into(imageView)
 			}

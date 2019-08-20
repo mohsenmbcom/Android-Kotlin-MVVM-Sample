@@ -50,7 +50,7 @@ class NewsRecyclerAdapter() : RecyclerView.Adapter<DataBindingViewHolder>() {
 		holder.bindVariable(BR.onItemClickListener, onItemClickListener)
 	}
 
-	fun updateNews(news: List<PersistedArticle>) {
+	fun updateNews(news: List<PersistedArticle>, onComplete: () -> Unit) {
 		disposables.clear()
 		disposables.add(
 			Single.just(articles to news)
@@ -66,7 +66,9 @@ class NewsRecyclerAdapter() : RecyclerView.Adapter<DataBindingViewHolder>() {
 						addAll(newList)
 					}
 					diff.dispatchUpdatesTo(this@NewsRecyclerAdapter)
+					onComplete()
 				}, {
+					onComplete()
 					it.printStackTrace()
 				})
 		)

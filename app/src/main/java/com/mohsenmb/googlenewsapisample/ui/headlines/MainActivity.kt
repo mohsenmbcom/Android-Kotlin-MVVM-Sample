@@ -98,11 +98,13 @@ class MainActivity : BaseActivity() {
 	}
 
 	private fun onHeadlinesChanged(list: List<PersistedArticle>?) {
-		adapter.updateNews(list ?: listOf())
+		adapter.updateNews(list ?: listOf()) { view_refresh.isRefreshing = false }
 	}
 
 	private fun onError(error: Error?) {
-		view_refresh.isRefreshing = false
+		if (error?.type != ErrorType.NoError) {
+			view_refresh.isRefreshing = false
+		}
 		error?.let {
 			when (it.type) {
 				ErrorType.Timeout, ErrorType.Http, ErrorType.Unknown -> {

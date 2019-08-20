@@ -41,17 +41,24 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
-				<androidx.appcompat.widget.AppCompatImageView
-					android:id="@+id/image_cover"
+				<FrameLayout
+					android:id="@+id/view_image_holder"
 					android:layout_width="0dp"
 					android:layout_height="0dp"
-					android:scaleType="centerCrop"
-					app:imageUrl="@{article.imageUrl}"
+					android:clipChildren="true"
 					app:layout_constraintDimensionRatio="2:1"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toTopOf="parent"
-					app:srcCompat="@drawable/img_news_placeholder" />
+					app:layout_constraintTop_toTopOf="parent">
+
+					<androidx.appcompat.widget.AppCompatImageView
+						android:id="@+id/image_cover"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:scaleType="centerCrop"
+						app:imageUrl="@{article.imageUrl}"
+						app:srcCompat="@drawable/img_news_placeholder" />
+				</FrameLayout>
 
 				<androidx.appcompat.widget.AppCompatImageView
 					android:layout_width="16dp"
@@ -60,8 +67,8 @@
 					android:alpha="0.8"
 					android:background="@color/background_article_cover_elements"
 					android:scaleType="centerCrop"
-					app:layout_constraintEnd_toEndOf="@id/image_cover"
-					app:layout_constraintTop_toTopOf="@id/image_cover"
+					app:layout_constraintEnd_toEndOf="@id/view_image_holder"
+					app:layout_constraintTop_toTopOf="@id/view_image_holder"
 					app:srcCompat="@drawable/ic_open_in_browser" />
 
 				<androidx.appcompat.widget.AppCompatTextView
@@ -80,8 +87,8 @@
 					android:textSize="12sp"
 					android:visibility='@{article.source != null ? View.VISIBLE : View.GONE}'
 					app:fontFamily="@font/title_font"
-					app:layout_constraintBottom_toBottomOf="@id/image_cover"
-					app:layout_constraintStart_toStartOf="@id/image_cover"
+					app:layout_constraintBottom_toBottomOf="@id/view_image_holder"
+					app:layout_constraintStart_toStartOf="@id/view_image_holder"
 					tools:text="BBC World" />
 
 				<androidx.appcompat.widget.AppCompatTextView
@@ -97,7 +104,7 @@
 					app:fontFamily="@font/title_font"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/image_cover"
+					app:layout_constraintTop_toBottomOf="@id/view_image_holder"
 					tools:text="A simple news title to see the preview" />
 
 				<androidx.appcompat.widget.AppCompatTextView
